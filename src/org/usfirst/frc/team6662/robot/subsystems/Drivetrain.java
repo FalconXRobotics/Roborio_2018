@@ -13,7 +13,7 @@ public class Drivetrain extends Subsystem {
 	}
 	
 	// this can stay blank, unless you need a default
-	// however it's needed since this is an 
+	// however it's needed since this is an abstract method in Subsystem
 	@Override
 	protected void initDefaultCommand() {}
 
