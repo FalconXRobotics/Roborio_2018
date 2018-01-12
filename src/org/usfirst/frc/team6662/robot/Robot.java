@@ -12,8 +12,9 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc.team6662.robot.commands.ExampleCommand;
-import org.usfirst.frc.team6662.robot.subsystems.ExampleSubsystem;
+
+import org.usfirst.frc.team6662.robot.commands.TeleopDrive;
+import org.usfirst.frc.team6662.robot.subsystems.Drivetrain;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -23,12 +24,14 @@ import org.usfirst.frc.team6662.robot.subsystems.ExampleSubsystem;
  * project.
  */
 public class Robot extends TimedRobot {
-	public static final ExampleSubsystem kExampleSubsystem
-			= new ExampleSubsystem();
-	public static OI m_oi;
+	public static final Drivetrain drivetrain = new Drivetrain();
+	public static OI oi;
 
-	Command m_autonomousCommand;
-	SendableChooser<Command> m_chooser = new SendableChooser<>();
+	// right now these do nothing
+	Command autonomousCommand;
+	SendableChooser<Command> chooser = new SendableChooser<>();
+	
+	Command teleopCommand;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -36,10 +39,10 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotInit() {
-		m_oi = new OI();
-		m_chooser.addDefault("Default Auto", new ExampleCommand());
+		oi = new OI();
+		//chooser.addDefault("Default Auto", new ExampleCommand());
 		// chooser.addObject("My Auto", new MyAutoCommand());
-		SmartDashboard.putData("Auto mode", m_chooser);
+		SmartDashboard.putData("Auto mode", chooser);
 	}
 
 	/**
@@ -60,9 +63,7 @@ public class Robot extends TimedRobot {
 	/**
 	 * This autonomous (along with the chooser code above) shows how to select
 	 * between different autonomous modes using the dashboard. The sendable
-	 * chooser code works with the Java SmartDashboard. If you prefer the
-	 * LabVIEW Dashboard, remove all of the chooser code and uncomment the
-	 * getString code to get the auto name from the text box below the Gyro
+	 * chooser code works with the Java SmartDashboard.
 	 *
 	 * <p>You can add additional auto modes by adding additional commands to the
 	 * chooser code above (like the commented example) or additional comparisons
@@ -70,7 +71,7 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		m_autonomousCommand = m_chooser.getSelected();
+		autonomousCommand = chooser.getSelected();
 
 		/*
 		 * String autoSelected = SmartDashboard.getString("Auto Selector",
@@ -80,8 +81,8 @@ public class Robot extends TimedRobot {
 		 */
 
 		// schedule the autonomous command (example)
-		if (m_autonomousCommand != null) {
-			m_autonomousCommand.start();
+		if (autonomousCommand != null) {
+			autonomousCommand.start();
 		}
 	}
 
@@ -90,6 +91,8 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
+		// command based programming will automatically run any commands
+		// scheduled in autonomous
 		Scheduler.getInstance().run();
 	}
 
@@ -99,9 +102,12 @@ public class Robot extends TimedRobot {
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
-		if (m_autonomousCommand != null) {
-			m_autonomousCommand.cancel();
+		if (autonomousCommand != null) {
+			autonomousCommand.cancel();
 		}
+		
+		teleopCommand = new TeleopDrive();
+		
 	}
 
 	/**
@@ -112,6 +118,13 @@ public class Robot extends TimedRobot {
 		Scheduler.getInstance().run();
 	}
 
+	/**
+	 * This function setups the test.
+	 */
+	@Override
+	public void testInit() {
+		
+	}
 	/**
 	 * This function is called periodically during test mode.
 	 */

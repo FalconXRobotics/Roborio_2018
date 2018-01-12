@@ -11,14 +11,16 @@ import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team6662.robot.Robot;
 
 /**
- * An example command.  You can replace me with your own command.
+ * Code for controlling the robot during tele-op
  */
-public class ExampleCommand extends Command {
-	public ExampleCommand() {
+public class TeleopDrive extends Command {
+	public TeleopDrive() {
 		// Use requires() here to declare subsystem dependencies
-		requires(Robot.kExampleSubsystem);
+		requires(Robot.drivetrain);
 	}
 
+	//TODO: write controller code
+	
 	// Called just before this Command runs the first time
 	@Override
 	protected void initialize() {
